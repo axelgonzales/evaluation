@@ -1,10 +1,17 @@
 package com.pe.alicorp.core.coevaluation.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pe.alicorp.core.coevaluation.domain.EvaluationEntity;
-import com.pe.alicorp.core.coevaluation.controller.EvaluationController;
-import com.pe.alicorp.core.coevaluation.model.EvaluationRequest;
-import com.pe.alicorp.core.coevaluation.service.EvaluationService;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,28 +23,20 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.Mockito.doNothing;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pe.alicorp.core.coevaluation.domain.EvaluationEntity;
+import com.pe.alicorp.core.coevaluation.model.EvaluationRequest;
+import com.pe.alicorp.core.coevaluation.model.EvaluationSearch;
+import com.pe.alicorp.core.coevaluation.service.EvaluationService;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = EvaluationController.class)
 @ActiveProfiles("test")
 class EvaluationControllerTest {
 
-    /*
-    TODO: mock tracing
 
+	private static final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");  
+	
     @Autowired
     private MockMvc mockMvc;
 
@@ -52,48 +51,32 @@ class EvaluationControllerTest {
     @BeforeEach
     void setUp() {
         this.evaluationList = new ArrayList<>();
-        this.evaluationList.add(new EvaluationEntity(1L, "evaluation 1"));
-        this.evaluationList.add(new EvaluationEntity(2L, "evaluation 2"));
-        this.evaluationList.add(new EvaluationEntity(3L, "evaluation 3"));
+        this.evaluationList.add(new EvaluationEntity("1","negocio","ac.gonzalesllerena@gmail.com","Axel",1, new Date(), null));
+        this.evaluationList.add(new EvaluationEntity("2","negocio","ddd.gonzalesllerena@gmail.com","Diana",10, new Date(), null));
+        this.evaluationList.add(new EvaluationEntity("3","negocio","ssss.gonzalesllerena@gmail.com","Pierre",8, new Date(), null));
 
-        objectMapper.registerModule(new ProblemModule());
-        objectMapper.registerModule(new ConstraintViolationProblemModule());
     }
 
     @Test
     void shouldFetchAllEvaluations() throws Exception {
-        given(evaluationService.findAllEvaluations()).willReturn(this.evaluationList);
+    	Date dateIni = new Date();
+        String strDateIni = dateFormat.format(dateIni);  
+		Date dateEnd = new Date();
+		String strDateEnd = dateFormat.format(dateEnd);  
+    	EvaluationSearch search = new EvaluationSearch(dateIni,dateEnd);
+        given(evaluationService.searchEvaluations(search)).willReturn(this.evaluationList);
 
-        this.mockMvc.perform(get("/v1/evaluation"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", is(evaluationList.size())));
+        this.mockMvc.perform(get("/v1/evaluation/search?dateIni="+ strDateIni  + "&&dateEnd="+strDateEnd ))
+                .andExpect(status().isOk());
     }
 
-    @Test
-    void shouldFindEvaluationById() throws Exception {
-        Long evaluationId = 1L;
-        EvaluationEntity evaluation = new EvaluationEntity(evaluationId, "text 1");
-        given(evaluationService.findEvaluationById(evaluationId)).willReturn(Optional.of(evaluation));
 
-        this.mockMvc.perform(get("/v1/evaluation/{id}", evaluationId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.text", is(evaluation.getText())))
-        ;
-    }
 
-    @Test
-    void shouldReturn404WhenFetchingNonExistingEvaluation() throws Exception {
-        Long evaluationId = 1L;
-        given(evaluationService.findEvaluationById(evaluationId)).willReturn(Optional.empty());
 
-        this.mockMvc.perform(get("v1/evaluation/{id}", evaluationId))
-                .andExpect(status().isNotFound());
-
-    }
 
     @Test
     void shouldCreateNewEvaluation() throws Exception {
-        EvaluationRequest evaluationRequest = new  EvaluationRequest(5L, "new evaluationRequest");
+        EvaluationRequest evaluationRequest = new EvaluationRequest("negocio","ac.gonzalesllerena@gmail.com","Axel",1);
         given(evaluationService.saveEvaluation(evaluationRequest)).willAnswer((invocation) -> invocation.getArgument(0));
 
         this.mockMvc.perform(post("/v1/evaluation")
@@ -104,25 +87,15 @@ class EvaluationControllerTest {
 
     @Test
     void shouldUpdateEvaluation() throws Exception {
-        Long evaluationId = 1L;
-        EvaluationRequest evaluationRequest = new EvaluationRequest(evaluationId, "evaluation updated");
-        given(evaluationService.findEvaluationById(evaluationId)).willReturn(Optional.of(new EvaluationEntity(evaluationId, "evaluation updated")));
+        String evaluationId = "1";
+        EvaluationRequest evaluationRequest = new EvaluationRequest("negocio","ac.gonzalesllerena@gmail.com","Axel",1);
+        given(evaluationService.updateEvaluation(evaluationRequest,evaluationId)).willReturn(new EvaluationEntity("1","negocio","ac.gonzalesllerena@gmail.com","Axel",1, new Date(), null));
 
-        this.mockMvc.perform(put("/v1/evaluation/{id}", evaluationRequest.getId())
+        this.mockMvc.perform(put("/v1/evaluation/{id}", evaluationId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(evaluationRequest)))
                 .andExpect(status().isCreated());
     }
 
-    @Test
-    void shouldDeleteEvaluation() throws Exception {
-        Long evaluationId = 1L;
-        EvaluationEntity evaluation = new EvaluationEntity(evaluationId, "Some text");
-        given(evaluationService.findEvaluationById(evaluationId)).willReturn(Optional.of(evaluation));
-        doNothing().when(evaluationService).deleteEvaluationById(evaluation.getId());
 
-        this.mockMvc.perform(delete("/v1/evaluation/{id}", evaluation.getId()))
-                .andExpect(status().isAccepted());
-    }
-     */
 }

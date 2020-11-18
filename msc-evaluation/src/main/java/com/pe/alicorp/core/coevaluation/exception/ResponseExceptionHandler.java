@@ -49,6 +49,6 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
 		request.getDescription(false));
-		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_GATEWAY);
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
 	}
 }

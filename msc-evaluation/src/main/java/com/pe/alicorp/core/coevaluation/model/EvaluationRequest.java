@@ -18,8 +18,6 @@ import lombok.Setter;
 public class EvaluationRequest {
 	
 	
-    private String id;
-
     @NotNull
     private String service;
     

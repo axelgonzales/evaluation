@@ -36,13 +36,15 @@ public class EvaluationEntity {
     @Column(nullable = false)
     private String name;
     
+    @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
+    @Column(nullable = false)
+    private Integer qualification;
+    
+    
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date dateC;
     
-    @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
-    @Column(nullable = false)
-    private Integer qualification;
     
     @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
     @Column(nullable = false)

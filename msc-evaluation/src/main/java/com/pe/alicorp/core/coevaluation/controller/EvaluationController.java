@@ -44,17 +44,6 @@ public class EvaluationController {
         return evaluationService.searchEvaluations(search);
     }
 
-    @ApiOperation(value = "Obtiene Evaluation por ID", tags = { "Controlador Evaluation" })
-    @GetMapping("/{id}")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Evaluation encontrada", response = EvaluationEntity.class),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 500, message = "Error en el servidor", response = ExceptionResponse.class)})
-    public ResponseEntity<EvaluationEntity> getEvaluationById(@PathVariable String id) {
-        return evaluationService.findEvaluationById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
 
     @ApiOperation(value = "Registra Evaluation", tags = { "Controlador Evaluation" })
     @PostMapping

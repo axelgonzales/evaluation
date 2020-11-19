@@ -2,10 +2,8 @@ server:
   port: 8080
     
 spring:
-  main:
-    allow-bean-definition-overriding: true
   data:
-    mongodb:      host: localhost
+    mongodb:      host: mongo
       port: 27017
       database: evaluation
       

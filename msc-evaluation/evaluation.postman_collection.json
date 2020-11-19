@@ -1,0 +1,100 @@
+{
+	"info": {
+		"_postman_id": "8a02df5e-83cd-4537-a5f1-dc2a6ee53be1",
+		"name": "evaluation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"ac.gonzalesllerena@gmail.com\",\r\n  \"name\": \"AXel\",\r\n  \"qualification\": 10,\r\n  \"service\": \"Comelona\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/evaluation",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"evaluation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"string\",\r\n  \"name\": \"string\",\r\n  \"qualification\": 0,\r\n  \"service\": \"string\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/evaluation/5fb48e39979696577489283f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"evaluation",
+						"5fb48e39979696577489283f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/evaluation/search?dateEnd=10-12-2020&dateIni=10-10-2020",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"evaluation",
+						"search"
+					],
+					"query": [
+						{
+							"key": "dateEnd",
+							"value": "10-12-2020"
+						},
+						{
+							"key": "dateIni",
+							"value": "10-10-2020"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

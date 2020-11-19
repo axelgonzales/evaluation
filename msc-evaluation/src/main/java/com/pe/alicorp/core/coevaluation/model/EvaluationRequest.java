@@ -1,10 +1,8 @@
 package com.pe.alicorp.core.coevaluation.model;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-
-import com.sun.istack.NotNull;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,14 +21,12 @@ public class EvaluationRequest {
     
     @Email
     @NotBlank
-    @Column(nullable = false)
     private String email;
     
     @NotBlank
-    @Column(nullable = false)
     private String name;
     
-    @Column(nullable = false)
+    @NotNull
     private Integer qualification;
     
     

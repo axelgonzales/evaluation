@@ -1,5 +1,9 @@
 package com.pe.alicorp.core.coevaluation;
 
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -17,5 +21,10 @@ public class Application extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(Application.class);
+    }
+    
+    @PostConstruct
+    public void init(){
+      TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 }
